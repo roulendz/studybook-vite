@@ -27,10 +27,7 @@ export default defineConfig({
     plugins: [
         ViteRestart({
           reload: [
-            './content/**/*.htm',
-            './layouts/*.htm',
-            './pages/**/*.htm',
-            './partials/**/*.htm'
+            '..'
           ],
         }),
       ],
