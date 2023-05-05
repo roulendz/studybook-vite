@@ -3,7 +3,6 @@ url = "/"
 layout = "main"
 is_hidden = 0
 
-
 ==
 <?php
 function onInit()
@@ -12,69 +11,254 @@ function onInit()
 }
 ?>
 ==
-{##}
-{{ vite([ 'pages/index/index.js' ]) }}
-{% set arArticleList = ArticleList.make().sort('publish|desc').published().take(4) %}
+{##} {{ vite([ 'pages/index/index.js' ]) }} {% set available_dates = [ { "datetime": "2023-04-11 12:00:00", "available_seats": 12, "reserved_seats": 0 }, { "datetime": "2023-04-16 13:00:00", "available_seats": 13, "reserved_seats": 0 }, { "datetime": "2023-04-21 14:00:00", "available_seats": 14,
+"reserved_seats": 0 }, { "datetime": "2023-04-26 15:00:00", "available_seats": 15, "reserved_seats": 0 }, { "datetime": "2023-05-02 11:00:00", "available_seats": 16, "reserved_seats": 0 }, { "datetime": "2023-05-03 11:00:00", "available_seats": 16, "reserved_seats": 0 }, { "datetime": "2023-05-04
+11:00:00", "available_seats": 16, "reserved_seats": 0 }, { "datetime": "2023-05-05 11:00:00", "available_seats": 16, "reserved_seats": 0 }, { "datetime": "2023-05-06 11:00:00", "available_seats": 16, "reserved_seats": 0 }, { "datetime": "2023-05-07 11:00:00", "available_seats": 16, "reserved_seats":
+0 }, { "datetime": "2023-05-08 11:00:00", "available_seats": 16, "reserved_seats": 0 }, { "datetime":"2023-05-09 11:00:00", "available_seats": 16, "reserved_seats": 0 }, { "datetime": "2023-05-10 11:00:00", "available_seats": 16, "reserved_seats": 0 }, { "datetime": "2023-05-11 11:00:00",
+"available_seats": 16, "reserved_seats": 0 }, { "datetime": "2023-05-12 11:00:00", "available_seats": 16, "reserved_seats": 0 }, { "datetime": "2023-05-13 11:00:00", "available_seats": 16, "reserved_seats": 0 }, ] %} {% set categories = [ { "id": 1, "name": "Category 1" }, { "id": 2, "name":
+"Category 2" }, { "id": 3, "name": "Category 3" }, ] %} {% set courses = [ { "name": "Nagu kopšanas speciālists - Standart", "category_id": 2, "preview_text": "Description Nagu kopšanas speciālists - StandartNa...", "view_count": 100, "price": 365.00, "old_price": null, "available_seats": 10,
+"duration_days": 14 }, { "name": "Gēla nagu modelēsana - Proffesiona", "category_id": 2, "preview_text": "Description Gēla nagu modelēsana - ProffesionaGēla...", "view_count": 79, "price": 446.50, "old_price": 470.00, "available_seats": 10, "duration_days": 14 }, { "name": "Bāzes aparāta manikīra
+kurss bez priekšzināšanām (...)", "category_id": 2, "preview_text": "Description Bāzes aparāta manikīra kurss bez priek...", "view_count": 0, "price": 736.25, "old_price": 775.00, "available_seats": 10, "duration_days": 14 }, ] %}
 
-{% if this.theme.main_carousel_active and this.theme.main_carousel is not empty %}
-    {% partial 'carousel-main/carousel-main' arCarouselList = this.theme.main_carousel %}
-{% endif %}
-{% if this.theme.latest_news_is_active %}
-    {% partial 'news-list-latest/news-list-latest'
-        arArticleList = arArticleList
-        sSectionHeadingLevel = 2
-    %}
-{% endif %}
-{% if this.theme.has_popularity %}
-    {% partial 'product-list-small/product-list-small'
-        sProductListSmallType = sProductListSmallTypePopularity
-        sSectionHeading = 'heading_product_list_small_popular_products'|_
-        sSectionHeadingLevel = 2
-        iTake = 4
-        sBtnMore = true
-        sButtonName = 'button_show_more_products'|_
-        iShowIndex = 4
-    %}
-    {# TODO: Change sSectionHeadingLevel to iSectionHeadingLevel overall #}
-{% endif %}
-<h2 class="font-medium text-3xl text-gray-900 mb-10 uppercase"> {{' heading_product_categories'|_}}</h2>
-<div class="flex flex-col mb-10">
-    {% set iTake = 5 %}
-    {% set arCategoryListCount = CategoryList.make().tree() %}
-  
-    {# {% partial 'advanced-list/advanced-list'
-        body
-    %}
-        {% for obItem in arCategoryListCount %}
-            {% partial 'advanced-list/advanced-list-item'
-                sName = obItem.name
-                sUrl = obItem.getPageUrl('catalog/catalog')
-                sImagePath = obItem.icon.path
-                sPartialClasses = obItem.viewBag.cssClass
-                sLoad = 'true'
-                sHidden = 'hidden'
-                iTake = iTake
-            %}
-        {% endfor %}
-    {% endpartial %} #}
-    {% if arCategoryListCount|length > iTake %}
-        <div class="flex justify-center mt-10">
-            <button class="_advanced-list-button-show-all text-base rounded text-blue-800 border border-blue-800 border-solid py-3 px-8 w-full md:w-max hover:bg-blue-700 hover:border-blue-700 hover:text-white focus:outline-none active:bg-blue-900 focus-visible:ring-1 focus-visible:ring-blue-800 focus-visible:ring-offset-1 focus-visible:ring-offset-white focus-visible:bg-blue-800 focus-visible:text-white">{{ 'button_all_categories'|_ }}</button>
-            {% partial 'button/button'
-                sText = 'button_loading'|_
-                sPartialClasses = '_advanced-list-button-show-all-hidden w-full hidden relative pl-14 pr-10 md:w-max'
-                bDisabled = true
-                body
-            %}
-                <svg class="animate-spin absolute top-4 left-60 w-5 h-5 text-gray-400 md:left-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-            {% endpartial %}
-        </div>
-    {% endif %}
+<!-- Main Container -->
+<div class="container px-4 py-6 mx-auto">
+	<div class="flex items-center schedule-filter__day-picker-outer">
+		<!-- Day Picker Container -->
+		<div class="relative w-full overflow-hidden">
+			<button id="dayPickerPrev" type="button" class="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev="">
+				<span class="inline-flex items-center justify-center w-8 h-8 rounded-full group-hover:bg-gray-600 group-focus:outline-none group-focus:ring-4 group-focus:ring-white bg-gray-500/30 dark:bg-gray-600 dark:group-hover:bg-gray-500 dark:group-focus:ring-gray-800/70 sm:h-10 sm:w-10">
+					<svg aria-hidden="true" class="w-5 h-5 text-white dark:text-gray-800 sm:h-6 sm:w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+					</svg>
+					<span class="sr-only">Previous</span>
+				</span>
+			</button>
+			<div id="dayPickerContainer" class="my-0 overflow-x-scroll mx-14 schedule-filter__day-picker-container scrollbar-hide whitespace-nowrap">
+				{% for date in available_dates %}
+				<div class="inline-block day-picker__choice" data-date="{{ date.datetime|date('Y-m-d') }}">
+					<input type="radio" id="day-{{ loop.index }}" name="schedule-dt" value="{{ date.datetime|date('Y-m-d') }}" class="hidden day-picker__input" />
+					<label for="day-{{ loop.index }}" class="flex flex-col items-center px-2 py-1 bg-gray-200 border rounded cursor-pointer day-picker__label dark:bg-gray-600 dark:border-gray-700 light:bg-gray-200 light:border-gray-300">
+						<span class="font-semibold day-picker__day dark:text-gray-200 light:text-gray-800">{{ date.datetime|date('D')|upper }}</span>
+						<span class="day-picker__text dark:text-gray-200 light:text-gray-800">{{ date.datetime|date('j. M') }}</span>
+					</label>
+				</div>
+
+				{% endfor %}
+			</div>
+			<button id="dayPickerNext" type="button" class="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next="">
+				<span class="inline-flex items-center justify-center w-8 h-8 rounded-full group-hover:bg-gray-600 group-focus:outline-none group-focus:ring-4 group-focus:ring-white bg-gray-500/30 dark:bg-gray-600 dark:group-hover:bg-gray-500 dark:group-focus:ring-gray-800/70 sm:h-10 sm:w-10">
+					<svg aria-hidden="true" class="w-5 h-5 text-white dark:text-gray-800 sm:h-6 sm:w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+					</svg>
+					<span class="sr-only">Next</span>
+				</span>
+			</button>
+		</div>
+	</div>
+
+	<!-- Filter Container -->
+	<div class="w-full mb-6">
+		<label for="category-filter" class="block mb-2 font-semibold">Filter by Category:</label>
+		<select id="category-filter" class="w-full p-2 border border-gray-300 rounded">
+			{% for category in categories %}
+			<option value="{{ category.id }}">{{ category.name }}</option>
+			{% endfor %}
+		</select>
+	</div>
+
+	<!-- Courses Container -->
+	<div class="">
+		{% for course in courses %}
+		<div class="order-1 w-full px-6 mb-4 sm:mb-6 sm:order-none xl:px-0">
+			<div class="relative flex flex-col p-0 bg-white rounded-lg shadow-md rounded-8 sm:flex-col md:flex-row">
+				<div class="w-full md:basis-96 md:w-1/2">
+					<img class="object-cover w-full h-64 rounded-t-md md:rounded-l-md md:rounded-tr-none" src="https://manikirs.lv/wp-content/uploads/2023/03/2023_meistaru-dienas_IG-feed-9.jpg" alt="Card Image">
+					<!-- Additional content goes here -->
+				</div>
+				<div class="flex flex-row w-full p-3 mt-4 sm:mt-0 md:mt-0">
+					<div class="w-full sm:w-2/12 md:basis-64 md:w-1/2 ">
+						<h3 class="text-lg font-semibold text-center sm:text-left"> {{ course.price }}</h3>
+						<p class="hidden md:block"> {{ course.price }}</p>
+						<p class="hidden md:block">7. zālē Restorāns</p>
+						<button class="hidden px-4 py-2 mt-2 text-white bg-blue-500 rounded md:block">Skatīties treileri</button>
+					</div>
+					<div class="flex flex-col justify-between w-full sm:w-10/12 md:basis-full md:w-1/2">
+						<div class="flex grid flex-wrap items-center justify-between w-full grid-cols-2 md:nowrap">
+							<div class="w-full md:flex-grow-0 md:flex-shrink md:w-auto">
+								<h2 class="text-xl font-semibold">{{ course.name }}</h2>
+								<p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ course.preview_text|raw }}</p>
+							</div>
+							<div class="flex flex-wrap items-center justify-end ml-4 md:flex-grow-0 md:flex-row md:flex-shrink">
+								{# <button class="hidden px-4 py-2 mt-2 mb-2 mr-2 text-white bg-blue-500 rounded md:block md:mt-0">Button 1</button> #}
+								<button class="px-4 py-2 mx-2 mt-2 mb-2 text-white bg-blue-500 rounded sm:absolute sm:right-4 sm:static sm:top-4 md:absolute md:mt-0 md:relative md:right-0 md:static md:top-0">Book Appointment</button>
+							</div>
+						</div>
+						<div class="flex justify-between w-full">
+							<div class="flex flex-col">
+								<p class="hidden md:block">{{ course.available_seats }}</p>
+								<h3>Description 1</h3>
+							</div>
+							<div class="flex flex-col">
+								<p class="hidden md:block">{{ course.duration_days }}</p>
+								<h3>Description 2</h3>
+							</div>
+							<div class="flex flex-col">
+								<p class="hidden md:block">Title 3</p>
+								<h3>Description 3</h3>
+							</div>
+							<div class="flex flex-col">
+								<p class="hidden md:block">Title 4</p>
+								<h3>Description 4</h3>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		{% endfor %}
+	</div>
+
+	<div id="default-carousel" class="relative w-full" data-carousel="slide">
+		<!-- Carousel wrapper -->
+		<div class="relative h-56 overflow-hidden rounded-lg md:h-96">
+			<!-- Item 1 -->
+			{% for course in courses %}
+			<div class="grid hidden grid-cols-1 gap-6 duration-700 ease-in-out sm:grid-cols-2 lg:grid-cols-3" data-carousel-item>
+				<div class="absolute block w-full p-4 -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded-lg left-1/2 top-1/2">
+					<h3 class="mb-2 text-xl font-semibold">{{ course.name }}</h3>
+					<p class="mb-2 text-sm">{{ course.preview_text|raw }}</p>
+					<p>Price: {{ course.price }}</p>
+					{% if course.old_price %}
+					<p>Old Price: <del>{{ course.old_price }}</del></p>
+					{% endif %}
+					<p>Available Seats: {{ course.available_seats }}</p>
+					<p>Duration (days): {{ course.duration_days }}</p>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+		<!-- Slider indicators -->
+		<div class="absolute z-30 flex space-x-3 -translate-x-1/2 bottom-5 left-1/2">
+			<button type="button" class="w-3 h-3 rounded-full" aria-current="true" aria-label="Slide 1" data-carousel-slide-to="0"></button>
+			<button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 2" data-carousel-slide-to="1"></button>
+			<button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 3" data-carousel-slide-to="2"></button>
+			<button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 4" data-carousel-slide-to="3"></button>
+			<button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 5" data-carousel-slide-to="4"></button>
+		</div>
+		<!-- Slider controls -->
+		<button type="button" class="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
+			<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70 sm:h-10 sm:w-10">
+				<svg aria-hidden="true" class="w-5 h-5 text-white dark:text-gray-800 sm:h-6 sm:w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+				</svg>
+				<span class="sr-only">Previous</span>
+			</span>
+		</button>
+		<button type="button" class="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
+			<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70 sm:h-10 sm:w-10">
+				<svg aria-hidden="true" class="w-5 h-5 text-white dark:text-gray-800 sm:h-6 sm:w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+				</svg>
+				<span class="sr-only">Next</span>
+			</span>
+		</button>
+	</div>
 </div>
 
-{% if this.theme.page_seo_block_active %}
-    {% partial 'page-seo-content/page-seo-content' %}
-{% endif %}
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		const nextButton = document.querySelector("#dayPickerNext");
+		const prevButton = document.querySelector("#dayPickerPrev");
+		const dayPickerContainer = document.querySelector(".schedule-filter__day-picker-container");
+
+		let touchStartX = 0;
+		let touchEndX = 0;
+
+		function slideDates(direction) {
+			const currentScrollPosition = dayPickerContainer.scrollLeft;
+			const scrollAmount = 150 * direction; // You can adjust this value to control how much it scrolls
+
+			dayPickerContainer.scrollTo({
+				top: 0,
+				left: currentScrollPosition + scrollAmount,
+				behavior: "smooth",
+			});
+		}
+
+		function handleTouchStart(event) {
+			touchStartX = event.changedTouches[0].clientX;
+		}
+
+		function handleTouchEnd(event) {
+			touchEndX = event.changedTouches[0].clientX;
+			if (touchEndX < touchStartX) {
+				slideDates(1);
+			} else if (touchEndX > touchStartX) {
+				slideDates(-1);
+			}
+		}
+
+		nextButton.addEventListener("click", () => slideDates(1));
+		prevButton.addEventListener("click", () => slideDates(-1));
+
+		dayPickerContainer.addEventListener("touchstart", handleTouchStart, false);
+		dayPickerContainer.addEventListener("touchend", handleTouchEnd, false);
+	});
+	const radioInputs = document.querySelectorAll('.day-picker__input');
+    const labels = document.querySelectorAll('.day-picker__label');
+
+    radioInputs.forEach((input, index) => {
+      input.addEventListener('change', () => {
+        labels.forEach((label, labelIndex) => {
+          if (index === labelIndex) {
+            label.classList.remove('bg-gray-200');
+            label.classList.remove('dark:bg-gray-600');
+            label.classList.add('bg-blue-200');
+            label.classList.add('dark:bg-gray-500');
+          } else {
+            label.classList.remove('bg-blue-200');
+            label.classList.remove('dark:bg-gray-500');
+            label.classList.add('bg-gray-200');
+            label.classList.add('dark:bg-gray-600');
+          }
+        });
+      });
+    });
+</script>
+
+<style>
+	/* Custom scrollbar-hide utility class */
+	.scrollbar-hide::-webkit-scrollbar {
+		display: none;
+	}
+
+	.scrollbar-hide {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+</style>
+
+asd {% set arArticleList = ArticleList.make().sort('publish|desc').published().take(4) %} {% if this.theme.main_carousel_active and this.theme.main_carousel is not empty %} {% partial 'carousel-main/carousel-main' arCarouselList = this.theme.main_carousel %} {% endif %} {% if
+this.theme.latest_news_is_active %} {% partial 'news-list-latest/news-list-latest' arArticleList = arArticleList sSectionHeadingLevel = 2 %} {% endif %} {% if this.theme.has_popularity %} {% partial 'product-list-small/product-list-small' sProductListSmallType = sProductListSmallTypePopularity
+sSectionHeading = 'heading_product_list_small_popular_products'|_ sSectionHeadingLevel = 2 iTake = 4 sBtnMore = true sButtonName = 'button_show_more_products'|_ iShowIndex = 4 %} {# TODO: Change sSectionHeadingLevel to iSectionHeadingLevel overall #} {% endif %}
+<h2 class="mb-10 text-3xl font-medium text-gray-900 uppercase"></h2>
+<div class="flex flex-col mb-10">
+	{% set iTake = 5 %} {% set arCategoryListCount = CategoryList.make().tree() %} {# {% partial 'advanced-list/advanced-list' body %} {% for obItem in arCategoryListCount %} {% partial 'advanced-list/advanced-list-item' sName = obItem.name sUrl = obItem.getPageUrl('catalog/catalog') sImagePath =
+	obItem.icon.path sPartialClasses = obItem.viewBag.cssClass sLoad = 'true' sHidden = 'hidden' iTake = iTake %} {% endfor %} {% endpartial %} #} {% if arCategoryListCount|length > iTake %}
+	<div class="flex justify-center mt-10">
+		<button
+			class="w-full px-8 py-3 text-base text-blue-800 border border-blue-800 border-solid rounded _advanced-list-button-show-all hover:border-blue-700 hover:bg-blue-700 hover:text-white focus:outline-none focus-visible:bg-blue-800 focus-visible:text-white focus-visible:ring-1 focus-visible:ring-blue-800 focus-visible:ring-offset-1 focus-visible:ring-offset-white active:bg-blue-900 md:w-max">
+			{{ 'button_all_categories'|_ }}
+		</button>
+		{% partial 'button/button' sText = 'button_loading'|_ sPartialClasses = '_advanced-list-button-show-all-hidden w-full hidden relative pl-14 pr-10 md:w-max' bDisabled = true body %}
+		<svg class="absolute w-5 h-5 text-gray-400 left-60 top-4 animate-spin md:left-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+			<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+			<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+		</svg>
+		{% endpartial %}
+	</div>
+	{% endif %}
+</div>
+
+{% if this.theme.page_seo_block_active %} {% partial 'page-seo-content/page-seo-content' %} {% endif %}

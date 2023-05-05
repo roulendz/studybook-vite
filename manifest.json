@@ -1,0 +1,17 @@
+{
+  "assets/src/css/app.css": {
+    "file": "assets/app-2e7852d5.css",
+    "isEntry": true,
+    "src": "assets/src/css/app.css"
+  },
+  "assets/src/js/app.js": {
+    "file": "assets/globalJs-6b4f9664.js",
+    "isEntry": true,
+    "src": "assets/src/js/app.js"
+  },
+  "pages/index/index.js": {
+    "file": "assets/indexPageJs-0981a941.js",
+    "isEntry": true,
+    "src": "pages/index/index.js"
+  }
+}

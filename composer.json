@@ -1,0 +1,8 @@
+{
+    "name": "login.grupa/studybook-vite-theme",
+    "type": "october-theme",
+    "description": "Tailwind theme for Manikirs.lv LMS",
+    "require": {
+        "composer/installers": "~1.0"
+    }
+}
